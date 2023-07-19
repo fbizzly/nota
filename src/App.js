@@ -27,8 +27,14 @@ import {
   Stack,
   Grid,
   CardHeader,
+  Collapse,
+  Divider,
+  Button,
+  IconButton,
   Hidden
 } from "@mui/material";
+import ChevronUp from 'mdi-material-ui/ChevronUp'
+import ChevronDown from 'mdi-material-ui/ChevronDown'
 import {
   BrowserRouter as Router,
   Route,
@@ -38,6 +44,7 @@ import {
 } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,11 +54,16 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-// const useStyles = makeStyles((theme) => ({
-//   tableRow: {
-//     marginTop: theme.spacing(2),
-//   },
-// }));
+const useStyles = makeStyles((theme) => ({
+  tableRow: {
+    marginTop: theme.spacing(2),
+  },
+  expandedContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start"
+  }
+}));
 
 const theme = createTheme({
   palette: {
@@ -61,13 +73,58 @@ const theme = createTheme({
   }
 });
 
+function DataSo({so}){
+  const ccyFormat = num => {
+    return `${num.toFixed(2)}`
+  }
+  var invoiceSubtotal = 0;
+  for (var i in so){
+     invoiceSubtotal += parseFloat(so[i].price, 10);
+  }
+  return (
+    <TableContainer component={Paper} sx={{paddingRight:10, paddingLeft:10, paddingBottom: 10}}>
+      <Table aria-label='spanning table'>
+        <TableHead>
+          <TableRow>
+            <TableCell align='center' style={{fontWeight: "bold"}} colSpan={7}>
+              Details
+            </TableCell>
+            <TableCell align='center' style={{fontWeight: "bold"}} colSpan={5}>Price</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={1} align="left">No</TableCell>
+            <TableCell colSpan={4} align="left">Service</TableCell>
+            <TableCell colSpan={2} align="right">Amount</TableCell>
+            <TableCell colSpan={2} align="right">Unit Price</TableCell>
+            <TableCell colSpan={3} align="right">Total Price</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {so.map(row => (
+            <TableRow key={row.id}>
+              <TableCell colSpan={1}>{row.id}</TableCell>
+              <TableCell colSpan={4} align="left">{row.item_service}</TableCell>
+              <TableCell colSpan={2} align="right">{row.amount}</TableCell>
+              <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.fixed_price))}</TableCell>
+              <TableCell colSpan={3} align="right">{ccyFormat(parseFloat(row.price))}</TableCell>
+            </TableRow>
+          ))}
+          <TableRow>
+            <TableCell colSpan={4} rowSpan={3} />
+            <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal: </Typography></TableCell>
+            <TableCell colSpan={4} align='right' style={{fontWeight: "bold"}}>{ccyFormat(invoiceSubtotal)}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+  )
+}
 function CardHeaderCustom(){
   return(
     <Card>
       <CardMedia
         sx={{ height: 140 }}
         image="https://firebasestorage.googleapis.com/v0/b/pet-client-profile.appspot.com/o/1.png?alt=media"
-        title="green iguana"
       />
       <CardContent sx={{paddingRight:10, paddingLeft:10}}>
         <Typography gutterBottom variant="h3" component="div" sx={{fontWeight: 'bold', borderBottom: 'solid 1px rgba(0, 0, 0, 0.1)'}}>
@@ -185,7 +242,7 @@ const TableSpanning = ({services}) => {
   }
   var invoiceSubtotal = 0;
   for (var i in services){
-     invoiceSubtotal += parseInt(services[i].price, 10);
+     invoiceSubtotal += parseFloat(services[i].price, 10);
   }
   return (
     <TableContainer component={Paper} sx={{paddingRight:10, paddingLeft:10, paddingBottom: 10}}>
@@ -213,8 +270,8 @@ const TableSpanning = ({services}) => {
               <TableCell colSpan={3} align="left">{row.item_service}</TableCell>
               <TableCell colSpan={3} align="left">{row.doctor}</TableCell>
               <TableCell colSpan={1} align="right">{row.amount}</TableCell>
-              <TableCell colSpan={2} align="right">{ccyFormat(parseInt(row.fixed_price))}</TableCell>
-              <TableCell colSpan={2} align="right">{ccyFormat(parseInt(row.price))}</TableCell>
+              <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.fixed_price))}</TableCell>
+              <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.price))}</TableCell>
             </TableRow>
           ))}
           <TableRow>
@@ -232,23 +289,32 @@ function App_main({ match }) {
   let { id } = useParams();
   const [services, setServices] = useState([]);
   const [users, setUsers] = useState([]);
+  const [so, setSo] = useState([]);
   useEffect(() => {
     fetchData();
   }, []);
   const fetchData = async () => {
-    await fetch(`http://localhost:9000/PV-20220101-2690`, {
-      // await fetch(`https://19c7-158-140-163-37.ngrok-free.app/PV-20220101-2690`, {
-      headers: {
-        "ngrok-skip-browser-warning": "*"
+    await fetch(`http://localhost:9000/layanan/PV-20220101-2690`)
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.lenght != 0) {
+        setServices(res);
       }
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.lenght != 0) {
-          setServices(res);
-          setUsers(res[0]);
-        }
-      });
+    });
+    await fetch(`http://localhost:9000/user/PV-20220101-2690`)
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.lenght != 0) {
+        setUsers(res[0]);
+      }
+    });
+    await fetch(`http://localhost:9000/so/PV-20220101-2690`)
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.lenght != 0) {
+        setSo(res)
+      }
+    });
   };
   return (
     <React.Fragment>
@@ -261,17 +327,23 @@ function App_main({ match }) {
         </svg>
         <Container maxWidth="md" >
           <Grid container>
-            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 100 }} boxShadow={20}>
+            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 20 }} boxShadow={20}>
               <CardHeaderCustom/>
             </Grid>
-            <Grid item xs={12} style={{ marginBottom: 100, marginTop: 100}} boxShadow={20}>
+            <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20}} boxShadow={20}>
               <GenerateBarcode imageUrl={'PV-20220101-2690'}/>
               <CardUsers users={users}/>
             </Grid>
-            <Grid item xs={12} style={{ marginBottom: 100, marginTop: 20 }} boxShadow={20}>
+            <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20 }} boxShadow={20}>
               <Card>
                 <CardHeader title='Layanan' sx={{paddingTop:10, paddingRight:10, paddingLeft:10, fontWeight: 'bold' }} titleTypographyProps={{ variant: 'h4' }} />
                 <TableSpanning services={services}/>
+              </Card>
+            </Grid>
+            <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20}} boxShadow={20}>
+              <Card>
+                <CardHeader title='Sale Order' sx={{paddingTop:10, paddingRight:10, paddingLeft:10, fontWeight: 'bold' }} titleTypographyProps={{ variant: 'h4' }} />
+                <DataSo so={so}/>
               </Card>
             </Grid>
           </Grid>
