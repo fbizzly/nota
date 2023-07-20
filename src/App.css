@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.textContainer {
+  display: block;
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+DataSo {
+  color:red !important;
+}

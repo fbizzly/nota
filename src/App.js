@@ -45,6 +45,8 @@ import {
 import { styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import "./App.css";
+import numeral from 'numeral';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -62,7 +64,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start"
-  }
+  },
+  root: {
+  },
 }));
 
 const theme = createTheme({
@@ -73,14 +77,18 @@ const theme = createTheme({
   }
 });
 
-function DataSo({so}){
-  const ccyFormat = num => {
-    return `${num.toFixed(2)}`
-  }
-  var invoiceSubtotal = 0;
-  for (var i in so){
-     invoiceSubtotal += parseFloat(so[i].price, 10);
-  }
+const ccyFormat = num => {
+  return `${numeral(num).format('0,0.00')}`
+}
+
+function DataSo({so, soSubtotal, layananSubtotal}){
+
+  const [expandedRow, setExpandedRow] = useState(null);
+
+  const handleExpand = (rowId) => {
+    setExpandedRow(expandedRow === rowId ? null : rowId);
+  };
+  
   return (
     <TableContainer component={Paper} sx={{paddingRight:10, paddingLeft:10, paddingBottom: 10}}>
       <Table aria-label='spanning table'>
@@ -96,25 +104,51 @@ function DataSo({so}){
             <TableCell colSpan={4} align="left">Service</TableCell>
             <TableCell colSpan={2} align="right">Amount</TableCell>
             <TableCell colSpan={2} align="right">Unit Price</TableCell>
-            <TableCell colSpan={3} align="right">Total Price</TableCell>
+            <TableCell colSpan={2} align="right">Total Price</TableCell>
+            <TableCell colSpan={1} align="right">Test</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {so.map(row => (
-            <TableRow key={row.id}>
-              <TableCell colSpan={1}>{row.id}</TableCell>
-              <TableCell colSpan={4} align="left">{row.item_service}</TableCell>
-              <TableCell colSpan={2} align="right">{row.amount}</TableCell>
-              <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.fixed_price))}</TableCell>
-              <TableCell colSpan={3} align="right">{ccyFormat(parseFloat(row.price))}</TableCell>
+          <TableBody>
+            {so.map(row => (
+              <React.Fragment key={row.id}>
+                <TableRow onClick={() => handleExpand(row.id)}>
+                  <TableCell colSpan={1}>{row.id}</TableCell>
+                  <TableCell colSpan={4} align="left">{row.item_service}</TableCell>
+                  <TableCell colSpan={2} align="right">{row.amount}</TableCell>
+                  <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.fixed_price))}</TableCell>
+                  <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.price))}</TableCell>
+                  <TableCell colSpan={1} align="right">
+                    <IconButton onClick={handleExpand}>
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell style={{ padding: 0 }} colSpan={12}>
+                    <Collapse in={expandedRow === row.id} timeout="auto" unmountOnExit>
+                      {/* Your collapsible content */}
+                      <div>
+                        <p>Content goes here...</p>
+                      </div>
+                    </Collapse>
+                    </TableCell>
+                </TableRow>
+              </React.Fragment>
+            ))}
+            <TableRow>
+              <TableCell colSpan={4} rowSpan={3} />
+              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal Layanan: </Typography></TableCell>
+              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(layananSubtotal)}</TableCell>
             </TableRow>
-          ))}
-          <TableRow>
-            <TableCell colSpan={4} rowSpan={3} />
-            <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal: </Typography></TableCell>
-            <TableCell colSpan={4} align='right' style={{fontWeight: "bold"}}>{ccyFormat(invoiceSubtotal)}</TableCell>
-          </TableRow>
-        </TableBody>
+            <TableRow>
+              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal Sale Order: </Typography></TableCell>
+              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(soSubtotal)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Total: </Typography></TableCell>
+              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(layananSubtotal + soSubtotal)}</TableCell>
+            </TableRow>
+          </TableBody>
       </Table>
     </TableContainer>
   )
@@ -235,15 +269,8 @@ function GenerateBarcode({imageUrl}){
   );
 }
 
-const TableSpanning = ({services}) => {
-  // const classes = useStyles();
-  const ccyFormat = num => {
-    return `${num.toFixed(2)}`
-  }
-  var invoiceSubtotal = 0;
-  for (var i in services){
-     invoiceSubtotal += parseFloat(services[i].price, 10);
-  }
+const TableSpanning = ({services, soSubtotal, layananSubtotal}) => {
+  const classes = useStyles();
   return (
     <TableContainer component={Paper} sx={{paddingRight:10, paddingLeft:10, paddingBottom: 10}}>
       <Table aria-label='spanning table'>
@@ -274,11 +301,19 @@ const TableSpanning = ({services}) => {
               <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.price))}</TableCell>
             </TableRow>
           ))}
-          <TableRow>
-            <TableCell colSpan={4} rowSpan={3} />
-            <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal: </Typography></TableCell>
-            <TableCell colSpan={4} align='right' style={{fontWeight: "bold"}}>{ccyFormat(invoiceSubtotal)}</TableCell>
-          </TableRow>
+            <TableRow>
+              <TableCell colSpan={4} rowSpan={3} />
+              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal Layanan: </Typography></TableCell>
+              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(layananSubtotal)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal Sale Order: </Typography></TableCell>
+              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(soSubtotal)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Total: </Typography></TableCell>
+              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(layananSubtotal + soSubtotal)}</TableCell>
+            </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
@@ -316,6 +351,16 @@ function App_main({ match }) {
       }
     });
   };
+
+  var layananSubtotal = 0;
+  for (var i in so){
+     layananSubtotal += parseFloat(so[i].price, 10);
+  }
+
+  var soSubtotal = 0;
+  for (var i in services){
+     soSubtotal += parseFloat(services[i].price, 10);
+  }
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
@@ -337,19 +382,18 @@ function App_main({ match }) {
             <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20 }} boxShadow={20}>
               <Card>
                 <CardHeader title='Layanan' sx={{paddingTop:10, paddingRight:10, paddingLeft:10, fontWeight: 'bold' }} titleTypographyProps={{ variant: 'h4' }} />
-                <TableSpanning services={services}/>
+                <TableSpanning services={services} soSubtotal={soSubtotal} layananSubtotal={layananSubtotal}/>
               </Card>
             </Grid>
             <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20}} boxShadow={20}>
               <Card>
                 <CardHeader title='Sale Order' sx={{paddingTop:10, paddingRight:10, paddingLeft:10, fontWeight: 'bold' }} titleTypographyProps={{ variant: 'h4' }} />
-                <DataSo so={so}/>
+                <DataSo so={so} soSubtotal={soSubtotal} layananSubtotal={layananSubtotal}/>
               </Card>
             </Grid>
           </Grid>
         </Container>
        
-
         <Card sx={{ minWidth: 275 , marginTop: 5}}>
           <Container maxWidth="md">
             <CardContent>
