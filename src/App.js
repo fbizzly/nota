@@ -81,7 +81,67 @@ const ccyFormat = num => {
   return `${numeral(num).format('0,0.00')}`
 }
 
-function DataSo({so, soSubtotal, layananSubtotal}){
+function CollapseTop({soSubtotal, layananSubtotal}){
+  const [expanded, setExpanded] = useState(false);
+  const handleExpand = () => {
+    setExpanded((prevExpanded) => !prevExpanded);
+  };
+  return(
+    <Card onClick={handleExpand}>
+      <CardContent sx={{paddingRight:10, paddingLeft:10}}>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <Grid container spacing={0} paddingBottom={1} >
+            <Grid item xs={12} sm={6}> 
+              <Typography variant='h5'>Total Layanan</Typography>
+              <Typography variant='h5'>Total Sale Order</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant='h5' align='right'>{ccyFormat(layananSubtotal)}</Typography>
+              <Typography variant='h5' align='right'>{ccyFormat(soSubtotal)}</Typography>
+            </Grid>
+          </Grid>
+        </Collapse>
+        <Grid container spacing={0} paddingBottom={1} sx={{borderBottom: "1px dashed rgba(0, 0, 0, 0.1)"}} >
+          <Grid item xs={12} sm={6}> 
+            <Typography variant='h5'>Total Layanan</Typography>
+            <Typography variant='h5'>Total Sale Order</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Grid container>
+              <Grid item xs={12} sm={6}>
+                <Typography variant='h5' align='right'>Rp. </Typography>
+                <Typography variant='h5' align='right'>Rp. </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant='h5' align='right'>{ccyFormat(layananSubtotal)}</Typography>
+                <Typography variant='h5' align='right'>{ccyFormat(soSubtotal)}</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={0} marginTop={2}>
+          <Grid item xs={12} sm={6}> 
+            <Typography variant='h5'>Total</Typography>
+            <Typography variant='h5'>Status</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Grid container>
+              <Grid item xs={12} sm={6}>
+                <Typography variant='h5' align='right'>Rp. </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant='h5' align='right'>{ccyFormat(layananSubtotal + soSubtotal)}</Typography>
+            </Grid>
+          </Grid>
+            <Typography variant='h5' align='right'>Selesai</Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  )
+}
+
+function DataSo({so, soSubtotal}){
 
   const [expandedRow, setExpandedRow] = useState(null);
 
@@ -104,49 +164,23 @@ function DataSo({so, soSubtotal, layananSubtotal}){
             <TableCell colSpan={4} align="left">Service</TableCell>
             <TableCell colSpan={2} align="right">Amount</TableCell>
             <TableCell colSpan={2} align="right">Unit Price</TableCell>
-            <TableCell colSpan={2} align="right">Total Price</TableCell>
-            <TableCell colSpan={1} align="right">Test</TableCell>
+            <TableCell colSpan={3} align="right">Total Price</TableCell>
           </TableRow>
         </TableHead>
           <TableBody>
             {so.map(row => (
-              <React.Fragment key={row.id}>
-                <TableRow onClick={() => handleExpand(row.id)}>
+                <TableRow key={row.id} onClick={() => handleExpand(row.id)} >
                   <TableCell colSpan={1}>{row.id}</TableCell>
                   <TableCell colSpan={4} align="left">{row.item_service}</TableCell>
                   <TableCell colSpan={2} align="right">{row.amount}</TableCell>
                   <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.fixed_price))}</TableCell>
-                  <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.price))}</TableCell>
-                  <TableCell colSpan={1} align="right">
-                    <IconButton onClick={handleExpand}>
-                      <ExpandMoreIcon />
-                    </IconButton>
-                  </TableCell>
+                  <TableCell colSpan={3} align="right">{ccyFormat(parseFloat(row.price))}</TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell style={{ padding: 0 }} colSpan={12}>
-                    <Collapse in={expandedRow === row.id} timeout="auto" unmountOnExit>
-                      {/* Your collapsible content */}
-                      <div>
-                        <p>Content goes here...</p>
-                      </div>
-                    </Collapse>
-                    </TableCell>
-                </TableRow>
-              </React.Fragment>
             ))}
             <TableRow>
               <TableCell colSpan={4} rowSpan={3} />
-              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal Layanan: </Typography></TableCell>
-              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(layananSubtotal)}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal Sale Order: </Typography></TableCell>
-              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(soSubtotal)}</TableCell>
-            </TableRow>
-            <TableRow>
               <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Total: </Typography></TableCell>
-              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(layananSubtotal + soSubtotal)}</TableCell>
+              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(soSubtotal)}</TableCell>
             </TableRow>
           </TableBody>
       </Table>
@@ -269,7 +303,7 @@ function GenerateBarcode({imageUrl}){
   );
 }
 
-const TableSpanning = ({services, soSubtotal, layananSubtotal}) => {
+const TableSpanning = ({services, layananSubtotal}) => {
   const classes = useStyles();
   return (
     <TableContainer component={Paper} sx={{paddingRight:10, paddingLeft:10, paddingBottom: 10}}>
@@ -303,16 +337,8 @@ const TableSpanning = ({services, soSubtotal, layananSubtotal}) => {
           ))}
             <TableRow>
               <TableCell colSpan={4} rowSpan={3} />
-              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal Layanan: </Typography></TableCell>
-              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(layananSubtotal)}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Subtotal Sale Order: </Typography></TableCell>
-              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(soSubtotal)}</TableCell>
-            </TableRow>
-            <TableRow>
               <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Total: </Typography></TableCell>
-              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(layananSubtotal + soSubtotal)}</TableCell>
+              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(layananSubtotal)}</TableCell>
             </TableRow>
         </TableBody>
       </Table>
@@ -325,25 +351,22 @@ function App_main({ match }) {
   const [services, setServices] = useState([]);
   const [users, setUsers] = useState([]);
   const [so, setSo] = useState([]);
-  useEffect(() => {
-    fetchData();
-  }, []);
   const fetchData = async () => {
-    await fetch(`http://localhost:9000/layanan/PV-20220101-2690`)
+    await fetch(`http://localhost:9000/layanan/${id}`)
     .then((res) => res.json())
     .then((res) => {
       if (res.lenght != 0) {
         setServices(res);
       }
     });
-    await fetch(`http://localhost:9000/user/PV-20220101-2690`)
+    await fetch(`http://localhost:9000/user/${id}`)
     .then((res) => res.json())
     .then((res) => {
       if (res.lenght != 0) {
         setUsers(res[0]);
       }
     });
-    await fetch(`http://localhost:9000/so/PV-20220101-2690`)
+    await fetch(`http://localhost:9000/so/${id}`)
     .then((res) => res.json())
     .then((res) => {
       if (res.lenght != 0) {
@@ -352,14 +375,22 @@ function App_main({ match }) {
     });
   };
 
+  useEffect(async () => {
+    fetchData();
+    console.log('aaa')
+  }, []);
+  
+  if (!services.length){
+    return NotFound();
+  }
   var layananSubtotal = 0;
-  for (var i in so){
-     layananSubtotal += parseFloat(so[i].price, 10);
+  for (var i in services){
+     layananSubtotal += parseFloat(services[i].price, 10);
   }
 
   var soSubtotal = 0;
-  for (var i in services){
-     soSubtotal += parseFloat(services[i].price, 10);
+  for (var i in so){
+     soSubtotal += parseFloat(so[i].price, 10);
   }
   return (
     <React.Fragment>
@@ -381,15 +412,18 @@ function App_main({ match }) {
             </Grid>
             <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20 }} boxShadow={20}>
               <Card>
-                <CardHeader title='Layanan' sx={{paddingTop:10, paddingRight:10, paddingLeft:10, fontWeight: 'bold' }} titleTypographyProps={{ variant: 'h4' }} />
-                <TableSpanning services={services} soSubtotal={soSubtotal} layananSubtotal={layananSubtotal}/>
+                <CardHeader title='Jasa' sx={{paddingTop:10, paddingRight:10, paddingLeft:10, fontWeight: 'bold' }} titleTypographyProps={{ variant: 'h4' }} />
+                <TableSpanning services={services} layananSubtotal={layananSubtotal}/>
               </Card>
             </Grid>
             <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20}} boxShadow={20}>
               <Card>
-                <CardHeader title='Sale Order' sx={{paddingTop:10, paddingRight:10, paddingLeft:10, fontWeight: 'bold' }} titleTypographyProps={{ variant: 'h4' }} />
-                <DataSo so={so} soSubtotal={soSubtotal} layananSubtotal={layananSubtotal}/>
+                <CardHeader title='Obat dan Barang' sx={{paddingTop:10, paddingRight:10, paddingLeft:10, fontWeight: 'bold' }} titleTypographyProps={{ variant: 'h4' }} />
+                <DataSo so={so} soSubtotal={soSubtotal}/>
               </Card>
+            </Grid>
+            <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20}} boxShadow={20}>
+              <CollapseTop soSubtotal={soSubtotal} layananSubtotal={layananSubtotal}/>
             </Grid>
           </Grid>
         </Container>
@@ -419,15 +453,49 @@ function App_main({ match }) {
 }
 
 function NotFound() {
-  return <h1>404 Not Found</h1>;
+
+  const BoxWrapper = styled(Box)(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+      width: '90vw'
+    }
+  }))
+  
+  const Img = styled('img')(({ theme }) => ({
+    marginBottom: theme.spacing(10),
+    [theme.breakpoints.down('lg')]: {
+      height: 450,
+      marginTop: theme.spacing(10)
+    },
+    [theme.breakpoints.down('md')]: {
+      height: 400
+    },
+    [theme.breakpoints.up('lg')]: {
+      marginTop: theme.spacing(13)
+    }
+  }))
+  
+
+  return (
+    <Box className='content-center'>
+      <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+        <BoxWrapper>
+          <Typography variant='h1'>404</Typography>
+          <Typography variant='h5' sx={{ mb: 1, fontSize: '1.5rem !important' }}>
+            Page Not Found ⚠️
+          </Typography>
+          <Typography variant='body2'>We couldn&prime;t find the page you are looking for.</Typography>
+        </BoxWrapper>
+      </Box>
+    </Box>
+  )
 }
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<App_main />} />
-        <Route path="/:id" element={<App_main />} />
+        <Route path="/" element={<NotFound />} />
+        <Route path="/nota/n/:id" element={<App_main />} />
         <Route element={<NotFound />} />
       </Routes>
     </Router>
