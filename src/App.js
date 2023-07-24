@@ -329,21 +329,21 @@ function App_main({ match }) {
   const [users, setUsers] = useState([]);
   const [so, setSo] = useState([]);
   const fetchData = async () => {
-    await fetch(`http://51.79.188.203:9076/layanan/${id}`)
+    await fetch(`http://localhost:9000/layanan/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.lenght != 0) {
           setServices(res);
         }
       });
-    await fetch(`http://51.79.188.203:9076/user/${id}`)
+    await fetch(`http://localhost:9000/user/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.lenght != 0) {
           setUsers(res[0]);
         }
       });
-    await fetch(`http://51.79.188.203:9076/so/${id}`)
+    await fetch(`http://localhost:9000/so/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.lenght != 0) {
