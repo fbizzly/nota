@@ -68,6 +68,7 @@ router.get('/layanan/:id', async function(req, res, next) {
                 LEFT JOIN product_template ON product_template.id = product_product.product_tmpl_id
                 WHERE pet_clinic_visitation.visitation_id = '${id}' 
                   AND product_template.name IS NOT NULL
+                  AND product_template.type = 'service'
               ) AS combined_result;`
   const client = await pool.connect();
   const result = await client.query(query);
