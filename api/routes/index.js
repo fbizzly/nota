@@ -59,8 +59,8 @@ router.get('/layanan/:id', async function(req, res, next) {
                 SELECT
                   product_template.name as item_service,
                   sale_order_line.product_uom_qty as amount,
-                  sale_order_line.price_unit as price,
-                  sale_order_line.price_total as fixed_price
+                  sale_order_line.price_unit as fixed_price,
+                  sale_order_line.price_total as price
                 FROM sale_order_line
                 LEFT JOIN sale_order ON sale_order.id = sale_order_line.order_id
                 LEFT JOIN pet_clinic_visitation ON pet_clinic_visitation.id = sale_order.pet_visitation_sale
