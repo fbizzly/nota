@@ -2,12 +2,8 @@ import ReactDOM from "react-dom";
 import React, { useState, useEffect } from "react";
 import QRCode from 'qrcode.react';
 import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   tableCellClasses,
   Typography,
-  Image,
   CssBaseline,
   Container,
   Box,
@@ -23,7 +19,6 @@ import {
   Card,
   CardMedia,
   CardContent,
-  CardActions,
   Stack
 } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
@@ -31,7 +26,6 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Link,
   useParams
 } from "react-router-dom";
 import { styled } from '@mui/material/styles';
@@ -77,9 +71,9 @@ const theme = createTheme({
   }
 });
 
-function CardHeader(){
-  return(
-    <Card sx={{paddingRight:10, paddingLeft:10}}>
+function CardHeader() {
+  return (
+    <Card sx={{ paddingRight: 10, paddingLeft: 10 }}>
       <CardMedia
         sx={{ height: 140 }}
         image="https://firebasestorage.googleapis.com/v0/b/pet-client-profile.appspot.com/o/1.png?alt=media"
@@ -87,7 +81,7 @@ function CardHeader(){
       />
       <CardContent>
         <Typography gutterBottom variant="h3" component="div">
-          Armonia Pet Care
+          Armonia Pet
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Ruko Griya Atirah Permai, Pai, Kec. Biringkanaya, Kota
@@ -101,10 +95,19 @@ function CardHeader(){
   )
 }
 
-function CardUsers({users}){
-  return(
-    <Card sx={{paddingRight:10, paddingLeft:10 }}>
+function CardUsers({ users }) {
+  return (
+    <Card sx={{ paddingRight: 10, paddingLeft: 10 }}>
       <CardContent>
+
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <Item>xs=8</Item>
+          </Grid>
+          <Grid item xs={8}>
+            <Item>xs=4</Item>
+          </Grid>
+        </Grid>
         <Typography variant="h5" component="div">
           Nama: {users["name"]}
         </Typography>
@@ -123,7 +126,7 @@ function CardUsers({users}){
   )
 }
 
-function DataService({services}){
+function DataService({ services }) {
   const columns = [
     { field: 'id', headerName: 'No', width: 90 },
     {
@@ -155,8 +158,8 @@ function DataService({services}){
       width: 150,
     }
   ];
-  return(
-    <Box sx={{ bgcolor: "white", height: 400, width: '100%', paddingRight:10, paddingLeft:10 }}>
+  return (
+    <Box sx={{ bgcolor: "white", height: 400, width: '100%', paddingRight: 10, paddingLeft: 10 }}>
       <DataGrid
         rows={services}
         columns={columns}
@@ -173,10 +176,10 @@ function DataService({services}){
   )
 }
 
-function DataTable({services}){
+function DataTable({ services }) {
   console.log(services)
-  return(
-    <TableContainer component={Paper} sx={{paddingRight:10, paddingLeft:10}}>
+  return (
+    <TableContainer component={Paper} sx={{ paddingRight: 10, paddingLeft: 10 }}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -204,12 +207,12 @@ function DataTable({services}){
     </TableContainer>
   )
 }
-function GenerateBarcode({imageUrl}){
+function GenerateBarcode({ imageUrl }) {
   return (
     <div style={{
       display: "flex",
       justifyContent: "center"
-      }}>
+    }}>
       <Stack spacing={2}>
         <Item><QRCode value={imageUrl} size={300} /></Item>
         <Item>{imageUrl}</Item>
@@ -247,18 +250,18 @@ function App_main({ match }) {
         <CssBaseline />
         <svg viewBox="50 90 100 10" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="100" cy="50" rx="100" ry="50" style={{
-              fill: "white"
-            }}></ellipse>
+            fill: "white"
+          }}></ellipse>
         </svg>
         <Container maxWidth="md">
-          <Box sx={{ boxShadow: 23, bgcolor: "white"}}>
-            <CardHeader/>
+          <Box sx={{ boxShadow: 23, bgcolor: "white" }}>
+            Bismillah
+            <CardHeader />
+            <GenerateBarcode imageUrl={'PV-20220101-269011'} />
             <br></br>
-            <GenerateBarcode imageUrl={'PV-20220101-2690'}/>
-            <br></br>
-            <CardUsers users={users}/>
+            <CardUsers users={users} />
             {/* <DataService services={services}/> */}
-            <DataTable services={services}/>
+            <DataTable services={services} />
           </Box>
         </Container>
       </ThemeProvider>

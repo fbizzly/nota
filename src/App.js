@@ -81,59 +81,61 @@ const ccyFormat = num => {
   return `${numeral(num).format('0,0.00')}`
 }
 
-function CollapseTop({soSubtotal, layananSubtotal}){
+function CollapseTop({ soSubtotal, layananSubtotal }) {
   const [expanded, setExpanded] = useState(false);
   const handleExpand = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
-  return(
-    <Card onClick={handleExpand}>
-      <CardContent sx={{paddingRight:10, paddingLeft:10}}>
+  return (
+    <Card onClick={handleExpand} sx={{ borderRadius: '16px' }}>
+      <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Grid container spacing={0} paddingBottom={1} >
-            <Grid item xs={12} sm={6}> 
-              <Typography variant='h5'>Total Layanan</Typography>
-              <Typography variant='h5'>Total Sale Order</Typography>
+            <Grid item xs={6} sm={6}>
+              <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }}>Total Layanan</Typography>
+              <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }}>Total Sale Order</Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant='h5' align='right'>{ccyFormat(layananSubtotal)}</Typography>
-              <Typography variant='h5' align='right'>{ccyFormat(soSubtotal)}</Typography>
+            <Grid item xs={6} sm={6}>
+              <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>{ccyFormat(layananSubtotal)}</Typography>
+              <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>{ccyFormat(soSubtotal)}</Typography>
             </Grid>
           </Grid>
         </Collapse>
-        <Grid container spacing={0} paddingBottom={1} sx={{borderBottom: "1px dashed rgba(0, 0, 0, 0.1)"}} >
-          <Grid item xs={12} sm={6}> 
-            <Typography variant='h5'>Total Layanan</Typography>
-            <Typography variant='h5'>Total Sale Order</Typography>
+        <Grid container spacing={0} paddingBottom={1} sx={{ borderBottom: "1px dashed rgba(0, 0, 0, 0.1)" }} >
+          <Grid item xs={6} sm={6}>
+            <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }}>Total Layanan</Typography>
+            <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }}>Total Sale Order</Typography>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={6} sm={6}>
             <Grid container>
-              <Grid item xs={12} sm={6}>
-                <Typography variant='h5' align='right'>Rp. </Typography>
-                <Typography variant='h5' align='right'>Rp. </Typography>
+              <Grid item xs={6} sm={6}>
+                <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>Rp. </Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>Rp. </Typography>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography variant='h5' align='right'>{ccyFormat(layananSubtotal)}</Typography>
-                <Typography variant='h5' align='right'>{ccyFormat(soSubtotal)}</Typography>
+              <Grid item xs={6} sm={6} align='right'>
+                <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>{ccyFormat(layananSubtotal)}</Typography>
+                <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>{ccyFormat(soSubtotal)}</Typography>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
         <Grid container spacing={0} marginTop={2}>
-          <Grid item xs={12} sm={6}> 
-            <Typography variant='h5'>Total</Typography>
-            <Typography variant='h5'>Status</Typography>
+          <Grid item xs={6} sm={6}>
+            <Typography sx={{ fontWeight: 'bold', fontSize: "1" }}>Total</Typography  >
+            <Typography sx={{ fontWeight: 'bold', fontSize: "1" }}>Status</Typography>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={6} sm={6}>
             <Grid container>
-              <Grid item xs={12} sm={6}>
-                <Typography variant='h5' align='right'>Rp. </Typography>
+              <Grid item xs={6} sm={6}>
+                <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>Rp. </Typography>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography variant='h5' align='right'>{ccyFormat(layananSubtotal + soSubtotal)}</Typography>
+              <Grid item xs={6} sm={6}>
+                <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>{ccyFormat(layananSubtotal + soSubtotal)}</Typography>
+              </Grid>
             </Grid>
-          </Grid>
-            <Typography variant='h5' align='right'>Selesai</Typography>
+            <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'><Button variant="contained" size="small" color="success">
+              Selesai
+            </Button></Typography>
           </Grid>
         </Grid>
       </CardContent>
@@ -141,208 +143,183 @@ function CollapseTop({soSubtotal, layananSubtotal}){
   )
 }
 
-function DataSo({so, soSubtotal}){
+function DataSo({ so, soSubtotal }) {
 
   const [expandedRow, setExpandedRow] = useState(null);
 
   const handleExpand = (rowId) => {
     setExpandedRow(expandedRow === rowId ? null : rowId);
   };
-  
+
   return (
-    <TableContainer component={Paper} sx={{paddingRight:10, paddingLeft:10, paddingBottom: 10}}>
-      <Table aria-label='spanning table'>
-        <TableHead>
-          <TableRow>
-            <TableCell align='center' style={{fontWeight: "bold"}} colSpan={7}>
-              Details
-            </TableCell>
-            <TableCell align='center' style={{fontWeight: "bold"}} colSpan={5}>Price</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={1} align="left">No</TableCell>
-            <TableCell colSpan={4} align="left">Service</TableCell>
-            <TableCell colSpan={2} align="right">Amount</TableCell>
-            <TableCell colSpan={2} align="right">Unit Price</TableCell>
-            <TableCell colSpan={3} align="right">Total Price</TableCell>
-          </TableRow>
-        </TableHead>
-          <TableBody>
-            {so.map(row => (
-                <TableRow key={row.id} onClick={() => handleExpand(row.id)} >
-                  <TableCell colSpan={1}>{row.id}</TableCell>
-                  <TableCell colSpan={4} align="left">{row.item_service}</TableCell>
-                  <TableCell colSpan={2} align="right">{row.amount}</TableCell>
-                  <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.fixed_price))}</TableCell>
-                  <TableCell colSpan={3} align="right">{ccyFormat(parseFloat(row.price))}</TableCell>
-                </TableRow>
-            ))}
-            <TableRow>
-              <TableCell colSpan={4} rowSpan={3} />
-              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Total: </Typography></TableCell>
-              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(soSubtotal)}</TableCell>
-            </TableRow>
-          </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <Card sx={{ borderRadius: '16px' }}>
+        <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
+          <Typography color="text.secondary" gutterBottom component="div" sx={{ fontWeight: 'bold', fontSize: "1.2em", borderBottom: 'solid 1px rgba(0, 0, 0, 0.1)' }}>
+            Order
+         </Typography>
+          {so.map(row => (
+            <Grid container xs={12} >
+              <Grid item xs={8}>
+                <Typography color="text.secondary" gutterBottom>
+                  {row.item_service} -{row.amount}
+                </Typography>
+              </Grid>
+              <Grid item xs={4} align="right">
+                {ccyFormat(parseFloat(row.price))}
+              </Grid>
+            </Grid>
+          ))}
+          <Grid container xs={12} >
+            <Grid item xs={8}>
+              <Typography color="text.secondary" gutterBottom>
+                Total
+            </Typography>
+            </Grid>
+            <Grid item xs={4} align="right">
+              {ccyFormat(parseFloat(soSubtotal))}
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    </>
   )
 }
-function CardHeaderCustom(){
-  return(
-    <Card>
+function CardHeaderCustom() {
+  return (
+    <Card sx={{ borderRadius: '16px' }}>
       <CardMedia
         sx={{ height: 140 }}
         image="https://firebasestorage.googleapis.com/v0/b/pet-client-profile.appspot.com/o/1.png?alt=media"
       />
-      <CardContent sx={{paddingRight:10, paddingLeft:10}}>
-        <Typography gutterBottom variant="h3" component="div" sx={{fontWeight: 'bold', borderBottom: 'solid 1px rgba(0, 0, 0, 0.1)'}}>
+      <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
+        <Typography gutterBottom component="div" sx={{ fontWeight: 'bold', fontSize: "1.2em", borderBottom: 'solid 1px rgba(0, 0, 0, 0.1)' }}>
           Armonia Pet Care
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography color="text.secondary" sx={{ fontSize: "1em" }}>
           Ruko Griya Atirah Permai, Pai, Kec. Biringkanaya, Kota
-          Makassar, Sulawesi Selatan 90242
+        Makassar, Sulawesi Selatan 90242
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography color="text.secondary" sx={{ fontSize: "1em" }}>
           6287841964088
         </Typography>
       </CardContent>
-    </Card>
+    </Card >
   )
 }
 
-function CardUsers({users}){
-  return(
-    <Card sx={{paddingRight:10, paddingLeft:10, paddingBottom: 5 }}>
-      
-      <CardContent>
-        <Grid container spacing={0} alignItems="flex-start">
-          <Grid item xs={2}>
-            <Typography component="div" style={{fontWeight: "bold"}}>
-              Nama
-            </Typography>
-          </Grid>
-          <Grid item xs={1}>
-            <Typography align="left" component="div" style={{fontWeight: "bold"}}>
-              :
-            </Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Typography component="div" style={{fontWeight: "bold"}}>
-              {users["name"]}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={2}>
-            <Typography component="div" style={{fontWeight: "bold"}}>
-              Hewan
-            </Typography>
-          </Grid>
-          <Grid item xs={1}>
-            <Typography align="left" component="div" style={{fontWeight: "bold"}}>
-              :
-            </Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Typography component="div" style={{fontWeight: "bold"}}>
-              {users["pet"]}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={2}>
-            <Typography component="div" style={{fontWeight: "bold"}}>
-              Alamat
-            </Typography>
-          </Grid>
-          <Grid item xs={1}>
-            <Typography align="left" component="div" style={{fontWeight: "bold"}}>
-              :
-            </Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Typography component="div" style={{fontWeight: "bold"}}>
-              {users["alamat"]}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={2}>
-            <Typography component="div" style={{fontWeight: "bold"}}>
-              Nomor Hp
-            </Typography>
-          </Grid>
-          <Grid item xs={1}>
-            <Typography align="left" component="div" style={{fontWeight: "bold"}}>
-              :
-            </Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Typography component="div" style={{fontWeight: "bold"}}>
-              {users["phone"]}
-            </Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
-  )
-}
-
-function GenerateBarcode({imageUrl}){
+function CardUsers({ users }) {
   return (
-    <Card sx={{paddingRight:10, paddingLeft:10, paddingTop: 10}}>
+
+    <Grid container sx={{ marginTop: 4 }} >
+      <Grid item xs={4}>
+        <Typography component="div" align="left" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          Nama
+            </Typography>
+      </Grid>
+      <Grid item xs={1}>
+        <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          :
+            </Typography>
+      </Grid>
+      <Grid item xs={7}>
+        <Typography component="div" align="left" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          {users["name"]}
+        </Typography>
+      </Grid>
+
+      <Grid item xs={4}>
+        <Typography component="div" align="left" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          Hewan
+            </Typography>
+      </Grid>
+      <Grid item xs={1}>
+        <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          :
+            </Typography>
+      </Grid>
+      <Grid item xs={7}>
+        <Typography component="div" align="left" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          {users["pet"]}
+        </Typography>
+      </Grid>
+
+      <Grid item xs={4}>
+        <Typography component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          Alamat
+            </Typography>
+      </Grid>
+      <Grid item xs={1}>
+        <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          :
+            </Typography>
+      </Grid>
+      <Grid item xs={7}>
+        <Typography component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          {users["alamat"]}
+        </Typography>
+      </Grid>
+
+      <Grid item xs={4}>
+        <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          Nomor Hp
+            </Typography>
+      </Grid>
+      <Grid item xs={1}>
+        <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          :
+            </Typography>
+      </Grid>
+      <Grid item xs={7}>
+        <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
+          {users["phone"]}
+        </Typography>
+      </Grid>
+    </Grid >
+  )
+}
+
+function GenerateBarcode({ imageUrl, users }) {
+  return (
+    <Card sx={{ paddingRight: 4, paddingLeft: 4, paddingTop: 4 }}>
       <CardContent>
         <div style={{
           display: "flex",
           justifyContent: "center"
-          }}>
+        }}>
           <Stack spacing={2}>
             <Item><QRCode value={imageUrl} size={300} /></Item>
             <Item>{imageUrl}</Item>
           </Stack>
         </div>
+        <CardUsers users={users} />
       </CardContent>
     </Card>
   );
 }
 
-const TableSpanning = ({services, layananSubtotal}) => {
+const TableSpanning = ({ services, layananSubtotal }) => {
   const classes = useStyles();
   return (
-    <TableContainer component={Paper} sx={{paddingRight:10, paddingLeft:10, paddingBottom: 10}}>
-      <Table aria-label='spanning table'>
-        <TableHead>
-          <TableRow>
-            <TableCell align='center' style={{fontWeight: "bold"}} colSpan={8}>
-              Details
-            </TableCell>
-            <TableCell align='center' style={{fontWeight: "bold"}} colSpan={4}>Price</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={1} align="left">No</TableCell>
-            <TableCell colSpan={3} align="left">Service</TableCell>
-            <TableCell colSpan={3} align="left">Doctor</TableCell>
-            <TableCell colSpan={1} align="right">Amount</TableCell>
-            <TableCell colSpan={2} align="right">Unit Price</TableCell>
-            <TableCell colSpan={2} align="right">Total Price</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {services.map(row => (
-            <TableRow key={row.id}>
-              <TableCell colSpan={1}>{row.id}</TableCell>
-              <TableCell colSpan={3} align="left">{row.item_service}</TableCell>
-              <TableCell colSpan={3} align="left">{row.doctor}</TableCell>
-              <TableCell colSpan={1} align="right">{row.amount}</TableCell>
-              <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.fixed_price))}</TableCell>
-              <TableCell colSpan={2} align="right">{ccyFormat(parseFloat(row.price))}</TableCell>
-            </TableRow>
-          ))}
-            <TableRow>
-              <TableCell colSpan={4} rowSpan={3} />
-              <TableCell colSpan={4}><Typography align="left" component="div" style={{fontWeight: "bold"}}>Total: </Typography></TableCell>
-              <TableCell colSpan={4} align='right' style={{fontWeight: ""}}>{ccyFormat(layananSubtotal)}</TableCell>
-            </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Card sx={{ borderRadius: '16px' }}>
+      <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
+        <Typography color="text.secondary" gutterBottom component="div" sx={{ fontWeight: 'bold', fontSize: "1.2em", borderBottom: 'solid 1px rgba(0, 0, 0, 0.1)' }}>
+          Layanan
+        </Typography>
+        {services.map(row => (
+          <Grid container xs={12} >
+            <Grid item xs={8}>
+              <Typography color="text.secondary" gutterBottom>
+                {row.item_service} -{row.amount}
+              </Typography>
+            </Grid>
+            <Grid item xs={4} align="right">
+              {ccyFormat(parseFloat(row.price))}
+            </Grid>
+          </Grid>
+        ))}
+      </CardContent>
+    </Card>
   )
 }
 
@@ -353,44 +330,44 @@ function App_main({ match }) {
   const [so, setSo] = useState([]);
   const fetchData = async () => {
     await fetch(`http://localhost:9000/layanan/${id}`)
-    .then((res) => res.json())
-    .then((res) => {
-      if (res.lenght != 0) {
-        setServices(res);
-      }
-    });
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.lenght != 0) {
+          setServices(res);
+        }
+      });
     await fetch(`http://localhost:9000/user/${id}`)
-    .then((res) => res.json())
-    .then((res) => {
-      if (res.lenght != 0) {
-        setUsers(res[0]);
-      }
-    });
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.lenght != 0) {
+          setUsers(res[0]);
+        }
+      });
     await fetch(`http://localhost:9000/so/${id}`)
-    .then((res) => res.json())
-    .then((res) => {
-      if (res.lenght != 0) {
-        setSo(res)
-      }
-    });
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.lenght != 0) {
+          setSo(res)
+        }
+      });
   };
 
   useEffect(async () => {
     fetchData();
     console.log('aaa')
   }, []);
-  
-  if (!services.length){
+
+  if (!services.length) {
     return NotFound();
   }
   var layananSubtotal = 0;
-  for (var i in services){
-     layananSubtotal += parseFloat(services[i].price, 10);
+  for (var i in services) {
+    layananSubtotal += parseFloat(services[i].price, 10);
   }
 
   var soSubtotal = 0;
-  for (var i in so){
-     soSubtotal += parseFloat(so[i].price, 10);
+  for (var i in so) {
+    soSubtotal += parseFloat(so[i].price, 10);
   }
   return (
     <React.Fragment>
@@ -398,51 +375,47 @@ function App_main({ match }) {
         <CssBaseline />
         <svg viewBox="50 90 100 10" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="100" cy="50" rx="100" ry="50" style={{
-              fill: "white"
-            }}></ellipse>
+            fill: "white"
+          }}></ellipse>
         </svg>
         <Container maxWidth="md" >
           <Grid container>
-            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 20 }} boxShadow={20}>
-              <CardHeaderCustom/>
+            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
+              <CardHeaderCustom />
             </Grid>
-            <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20}} boxShadow={20}>
-              <GenerateBarcode imageUrl={'PV-20220101-2690'}/>
-              <CardUsers users={users}/>
+            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }} >
+              <GenerateBarcode imageUrl={'PV-20220101-2690'} users={users} />
+
             </Grid>
-            <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20 }} boxShadow={20}>
+            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
+              <TableSpanning services={services} layananSubtotal={layananSubtotal} />
+            </Grid>
+            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
               <Card>
-                <CardHeader title='Jasa' sx={{paddingTop:10, paddingRight:10, paddingLeft:10, fontWeight: 'bold' }} titleTypographyProps={{ variant: 'h4' }} />
-                <TableSpanning services={services} layananSubtotal={layananSubtotal}/>
+                <DataSo so={so} soSubtotal={soSubtotal} />
               </Card>
             </Grid>
-            <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20}} boxShadow={20}>
-              <Card>
-                <CardHeader title='Obat dan Barang' sx={{paddingTop:10, paddingRight:10, paddingLeft:10, fontWeight: 'bold' }} titleTypographyProps={{ variant: 'h4' }} />
-                <DataSo so={so} soSubtotal={soSubtotal}/>
-              </Card>
-            </Grid>
-            <Grid item xs={12} style={{ marginBottom: 20, marginTop: 20}} boxShadow={20}>
-              <CollapseTop soSubtotal={soSubtotal} layananSubtotal={layananSubtotal}/>
+            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
+              <CollapseTop soSubtotal={soSubtotal} layananSubtotal={layananSubtotal} />
             </Grid>
           </Grid>
         </Container>
-       
-        <Card sx={{ minWidth: 275 , marginTop: 5}}>
+
+        <Card sx={{ minWidth: 275, marginTop: 5 }}>
           <Container maxWidth="md">
             <CardContent>
-              <Typography variant="h4" component="div" sx={{borderBottom: "1px solid rgba(0, 0, 0, 0.10)"}}>
+              <Typography component="div" sx={{ fontSize: "1.2em", borderBottom: "1px solid rgba(0, 0, 0, 0.10)" }}>
                 Syarat & Ketentuan
               </Typography>
               <br></br>
-              <Typography component="div">
-              1. Syarat & Ketentuan 1
+              <Typography component="div" sx={{ fontSize: "1em" }}>
+                1. Syarat & Ketentuan 1
               </Typography>
-              <Typography component="div">
-              2. Syarat & Ketentuan 2
+              <Typography component="div" sx={{ fontSize: "1em" }}>
+                2. Syarat & Ketentuan 2
               </Typography>
-              <Typography component="div">
-              3. Syarat & Ketentuan 3
+              <Typography component="div" sx={{ fontSize: "1em" }}>
+                3. Syarat & Ketentuan 3
               </Typography>
             </CardContent>
           </Container>
@@ -459,7 +432,7 @@ function NotFound() {
       width: '90vw'
     }
   }))
-  
+
   const Img = styled('img')(({ theme }) => ({
     marginBottom: theme.spacing(10),
     [theme.breakpoints.down('lg')]: {
@@ -473,7 +446,7 @@ function NotFound() {
       marginTop: theme.spacing(13)
     }
   }))
-  
+
 
   return (
     <Box className='content-center'>
