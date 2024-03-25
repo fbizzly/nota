@@ -3,7 +3,7 @@ var router = express.Router();
 const { Pool } = require('pg');
 const pool = new Pool({
   	user: 'root',
-  	host: '51.79.188.203',
+  	host: 'ip',
   	database: 'MPC',
   	password: 'postgres',
   	port: 5431,
@@ -59,8 +59,8 @@ router.get('/layanan/:id', async function(req, res, next) {
                 SELECT
                   product_template.name as item_service,
                   sale_order_line.product_uom_qty as amount,
-                  sale_order_line.price_unit as price,
-                  sale_order_line.price_total as fixed_price
+                  sale_order_line.price_unit as fixed_price,
+                  sale_order_line.price_total as price
                 FROM sale_order_line
                 LEFT JOIN sale_order ON sale_order.id = sale_order_line.order_id
                 LEFT JOIN pet_clinic_visitation ON pet_clinic_visitation.id = sale_order.pet_visitation_sale
@@ -68,6 +68,7 @@ router.get('/layanan/:id', async function(req, res, next) {
                 LEFT JOIN product_template ON product_template.id = product_product.product_tmpl_id
                 WHERE pet_clinic_visitation.visitation_id = '${id}' 
                   AND product_template.name IS NOT NULL
+                  AND product_template.type = 'service'
               ) AS combined_result;`
   const client = await pool.connect();
   const result = await client.query(query);
