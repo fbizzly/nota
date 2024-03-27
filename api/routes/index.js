@@ -2,98 +2,37 @@ var express = require('express');
 var router = express.Router();
 const { Pool } = require('pg');
 const pool = new Pool({
-  	user: 'root',
-  	host: 'ip',
-  	database: 'MPC',
-  	password: 'postgres',
-  	port: 5431,
+  	user: 'openpg',
+  	host: '127.0.0.1',
+  	database: 'test',
+  	password: 'openpgpwd',
+  	port: 5433,
   });
 
-router.get('/layanan/:id', async function(req, res, next) {
+router.get('/order/:id', async function(req, res, next) {
   var param = req.params;
 	var id = param.id;
-  // var query = `Select row_number() over () as id, product_template.name as item_service, pet_clinic_service.amount, pet_clinic_service.price, COALESCE(pet_clinic_service.fixed_price, 0) as fixed_price
-  //               from pet_clinic_service 
-  //               left join pet_clinic_visitation on pet_clinic_visitation.id = pet_clinic_service.visitation
-  //               left join pet_clinic_doctor as pet_clinic_doctor_doctor on pet_clinic_doctor_doctor.id = pet_clinic_service.doctor 
-  //               left join product_product on product_product.id = pet_clinic_service.item_service 
-  //               left join product_template on product_template.id = product_product.product_tmpl_id
-  //               left join product_category on product_category.id = product_template.categ_id
-  //               where pet_clinic_visitation.visitation_id = '${id}' 
-  //               and product_category.name = 'Vaksinasi'
-  //               and product_template.type = 'service'`
-
-  // var query2 = `Select row_number() over () as id, product_template.name as item_service, sale_order_line.product_uom_qty as amount, sale_order_line.price_unit as fixed_price, sale_order_line.price_total as price
-  //               from sale_order_line
-  //               left join sale_order on sale_order.id = sale_order_line.order_id
-  //               left join pet_clinic_visitation on pet_clinic_visitation.id = sale_order.pet_visitation_sale
-  //               left join product_product on product_product.id = sale_order_line.product_id 
-  //               left join product_template on product_template.id = product_product.product_tmpl_id
-  //               where pet_clinic_visitation.visitation_id = '${id}' 
-  //               and product_template.name is not null`
-
-  var query = `SELECT
-                row_number() OVER () as id,
-                item_service,
-                amount,
-                price,
-                fixed_price
-              FROM (
-                SELECT
-                  product_template.name as item_service,
-                  pet_clinic_service.amount,
-                  pet_clinic_service.price,
-                  COALESCE(pet_clinic_service.fixed_price, 0) as fixed_price
-                FROM pet_clinic_service 
-                LEFT JOIN pet_clinic_visitation ON pet_clinic_visitation.id = pet_clinic_service.visitation
-                LEFT JOIN pet_clinic_doctor AS pet_clinic_doctor_doctor ON pet_clinic_doctor_doctor.id = pet_clinic_service.doctor 
-                LEFT JOIN product_product ON product_product.id = pet_clinic_service.item_service 
-                LEFT JOIN product_template ON product_template.id = product_product.product_tmpl_id
-                LEFT JOIN product_category ON product_category.id = product_template.categ_id
-                WHERE pet_clinic_visitation.visitation_id = '${id}' 
-                  AND product_category.name = 'Vaksinasi'
-                  AND product_template.type = 'service'
-
-                UNION ALL
-
-                SELECT
-                  product_template.name as item_service,
-                  sale_order_line.product_uom_qty as amount,
-                  sale_order_line.price_unit as fixed_price,
-                  sale_order_line.price_total as price
-                FROM sale_order_line
-                LEFT JOIN sale_order ON sale_order.id = sale_order_line.order_id
-                LEFT JOIN pet_clinic_visitation ON pet_clinic_visitation.id = sale_order.pet_visitation_sale
-                LEFT JOIN product_product ON product_product.id = sale_order_line.product_id 
-                LEFT JOIN product_template ON product_template.id = product_product.product_tmpl_id
-                WHERE pet_clinic_visitation.visitation_id = '${id}' 
-                  AND product_template.name IS NOT NULL
-                  AND product_template.type = 'service'
-              ) AS combined_result;`
+  var query = `select row_number() over () as id, product_template.name as item_service, pos_order_line.qty as amount, pos_order_line.price_unit as price_unit, pos_order_line.price_subtotal_incl as price
+                from pos_order_line
+                left join pos_order on pos_order.id = pos_order_line.order_id
+                left join product_product on product_product.id = pos_order_line.product_id 
+                left join product_template on product_template.id = product_product.product_tmpl_id
+                where pos_order.pos_reference = '${id}'`
   const client = await pool.connect();
   const result = await client.query(query);
   const userData = result.rows;
   client.release();
-
-  // const client2 = await pool.connect();
-  // const result2 = await client2.query(query2);
-  // const userData2 = result2.rows;
-  // client2.release();
   res.send(userData)
 });
 
-router.get('/so/:id', async function(req, res, next) {
+
+router.get('/outlet/:id', async function(req, res, next) {
   var param = req.params;
-	var id = param.id;
-  var query = `select row_number() over () as id, product_template.name as item_service, sale_order_line.product_uom_qty as amount, sale_order_line.price_unit as fixed_price, sale_order_line.price_total as price
-                from sale_order_line
-                left join sale_order on sale_order.id = sale_order_line.order_id
-                left join pet_clinic_visitation on pet_clinic_visitation.id = sale_order.pet_visitation_sale
-                left join product_product on product_product.id = sale_order_line.product_id 
-                left join product_template on product_template.id = product_product.product_tmpl_id
-                where pet_clinic_visitation.visitation_id = '${id}' 
-                and product_template.type != 'service'
-                and product_template.name is not null`
+  var id = param.id;
+  var query = `select pos_config.receipt_header, pos_config.receipt_footer from pos_order
+                left join pos_session on pos_session.id = pos_order.session_id
+                left join pos_config on pos_session.config_id = pos_config.id
+                where pos_order.pos_reference = '${id}'`
   const client = await pool.connect();
   const result = await client.query(query);
   const userData = result.rows;
@@ -103,19 +42,18 @@ router.get('/so/:id', async function(req, res, next) {
 
 router.get('/user/:id', async function(req, res, next) {
   var param = req.params;
-	var id = param.id;
-  var query = `select pet_clinic_client.name, CONCAT(pet_clinic_kota.kab_kota, ', ', pet_clinic_client.village, ', ', pet_clinic_client.street, ' ', pet_clinic_client.zip) as alamat, pet_clinic_client.phone, pet_clinic_pet.name as pet
-                from pet_clinic_visitation
-                left join pet_clinic_client on pet_clinic_client.id = pet_clinic_visitation.owner
-                left join pet_clinic_pet on pet_clinic_pet.id = pet_clinic_visitation.pet
-                left join pet_clinic_kota on pet_clinic_kota.id = pet_clinic_client.city
-                left join sale_order on sale_order.pet_visitation_sale = pet_clinic_visitation.id
-                where pet_clinic_visitation.visitation_id = '${id}'`
+  var id = param.id;
+  var query = `select res_partner.name, CONCAT(rcs.name, ' ', res_partner.city, ' ', res_partner.street, ' ', res_partner.street2, '', res_partner.zip) as alamat, res_partner.phone
+                from pos_order
+                left join res_partner on res_partner.id = pos_order.partner_id
+                left join res_country_state rcs on rcs.id = res_partner.state_id
+                where pos_order.pos_reference = '${id}'`
   const client = await pool.connect();
   const result = await client.query(query);
   const userData = result.rows;
   client.release();
   res.send(userData)
 });
+
 
 module.exports = router;

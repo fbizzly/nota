@@ -103,7 +103,6 @@ function CollapseTop({ soSubtotal, layananSubtotal }) {
       <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
         <Grid container spacing={0} paddingBottom={1} sx={{ borderBottom: "1px dashed rgba(0, 0, 0, 0.1)" }} >
           <Grid item xs={6} sm={6}>
-            <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }}>Total Layanan</Typography>
             <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }}>Total Sale Order</Typography>
             {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
               <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }}>Pajak</Typography>
@@ -113,13 +112,11 @@ function CollapseTop({ soSubtotal, layananSubtotal }) {
             <Grid container>
               <Grid item xs={6} sm={6}>
                 <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>Rp. </Typography>
-                <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>Rp. </Typography>
                 {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
                   <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>Rp. </Typography>
                 </Collapse> */}
               </Grid>
               <Grid item xs={6} sm={6} align='right'>
-                <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>{ccyFormat(layananSubtotal)}</Typography>
                 <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>{ccyFormat(soSubtotal)}</Typography>
                 {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
                   <Typography sx={{ fontWeight: 'bold', fontSize: "1em" }} align='right'>{ccyFormat(soSubtotal)}</Typography>
@@ -162,7 +159,7 @@ function DataSo({ so, soSubtotal }) {
         <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
           <Typography color="text.secondary" gutterBottom component="div" sx={{ fontWeight: 'bold', fontSize: "1.2em", borderBottom: 'solid 1px rgba(0, 0, 0, 0.1)' }}>
             Order
-         </Typography>
+          </Typography>
           {so.map(row => (
             <Grid container key={row.id}>
               <Grid item xs={8}>
@@ -179,7 +176,7 @@ function DataSo({ so, soSubtotal }) {
             <Grid item xs={8}>
               <Typography color="text.secondary" gutterBottom>
                 Total
-            </Typography>
+              </Typography>
             </Grid>
             <Grid item xs={4} align="right">
               {ccyFormat(parseFloat(soSubtotal))}
@@ -194,7 +191,7 @@ function CardHeaderCustom() {
   return (
     <Card sx={{ borderRadius: '16px' }}>
       <CardMedia
-        sx={{ height: 140 , paddingTop: '100px'}}
+        sx={{ height: 140, paddingTop: '100px' }}
         image="https://firebasestorage.googleapis.com/v0/b/pet-client-profile.appspot.com/o/Logo%20Armonia%20Pet%20Care.png?alt=media"
       />
       <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
@@ -203,7 +200,7 @@ function CardHeaderCustom() {
         </Typography>
         <Typography color="text.secondary" sx={{ fontSize: "1em" }}>
           Ruko Griya Atirah Permai, Pai, Kec. Biringkanaya, Kota
-        Makassar, Sulawesi Selatan 90242
+          Makassar, Sulawesi Selatan 90242
         </Typography>
         <Typography color="text.secondary" sx={{ fontSize: "1em" }}>
           6287841964088
@@ -220,12 +217,12 @@ function CardUsers({ users }) {
       <Grid item xs={4}>
         <Typography component="div" align="left" style={{ fontSize: "1em", fontWeight: "bold" }}>
           Nama
-            </Typography>
+        </Typography>
       </Grid>
       <Grid item xs={1}>
         <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
           :
-            </Typography>
+        </Typography>
       </Grid>
       <Grid item xs={7}>
         <Typography component="div" align="left" style={{ fontSize: "1em", fontWeight: "bold" }}>
@@ -233,31 +230,31 @@ function CardUsers({ users }) {
         </Typography>
       </Grid>
 
-      <Grid item xs={4}>
+      {/* <Grid item xs={4}>
         <Typography component="div" align="left" style={{ fontSize: "1em", fontWeight: "bold" }}>
           Hewan
-            </Typography>
+        </Typography>
       </Grid>
       <Grid item xs={1}>
         <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
           :
-            </Typography>
+        </Typography>
       </Grid>
       <Grid item xs={7}>
         <Typography component="div" align="left" style={{ fontSize: "1em", fontWeight: "bold" }}>
           {users["pet"]}
         </Typography>
-      </Grid>
+      </Grid> */}
 
       <Grid item xs={4}>
         <Typography component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
           Alamat
-            </Typography>
+        </Typography>
       </Grid>
       <Grid item xs={1}>
         <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
           :
-            </Typography>
+        </Typography>
       </Grid>
       <Grid item xs={7}>
         <Typography component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
@@ -268,12 +265,12 @@ function CardUsers({ users }) {
       <Grid item xs={4}>
         <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
           Nomor Hp
-            </Typography>
+        </Typography>
       </Grid>
       <Grid item xs={1}>
         <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
           :
-            </Typography>
+        </Typography>
       </Grid>
       <Grid item xs={7}>
         <Typography align="left" component="div" style={{ fontSize: "1em", fontWeight: "bold" }}>
@@ -338,7 +335,7 @@ function App_main({ match }) {
   const [loading, setLoading] = useState(true);
   // const [dataImg, setDataImg] = useState(true);
   async function fetchData() {
-    await fetch(`http://localhost:9000/layanan/${id}`)
+    await fetch(`http://localhost:9000/order/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.lenght != 0) {
@@ -352,7 +349,7 @@ function App_main({ match }) {
           setUsers(res[0]);
         }
       });
-    await fetch(`http://localhost:9000/so/${id}`)
+    await fetch(`http://localhost:9000/order/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.lenght != 0) {
@@ -374,13 +371,13 @@ function App_main({ match }) {
 
   if (loading) {
     return (
-      <LoadingPage/>
+      <LoadingPage />
     )
   }
   if (!services.length) {
 
     return (
-      <NotFound/>
+      <NotFound />
     );
   }
   var layananSubtotal = 0;
@@ -404,15 +401,15 @@ function App_main({ match }) {
         <Container maxWidth="md" >
           <Grid container className={classes.contentToPrint} id="content-to-print">
             <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
-              <CardHeaderCustom/>
+              <CardHeaderCustom />
             </Grid>
             <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }} >
               <GenerateBarcode imageUrl={'PV-20220101-2690'} users={users} />
 
             </Grid>
-            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
+            {/* <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
               <TableSpanning services={services} layananSubtotal={layananSubtotal} />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
               <Card>
                 <DataSo so={so} soSubtotal={soSubtotal} />
@@ -447,7 +444,7 @@ function App_main({ match }) {
     </React.Fragment>
   );
 }
-function LoadingPage(){
+function LoadingPage() {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <Grid container>

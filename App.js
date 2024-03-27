@@ -126,55 +126,55 @@ function CardUsers({ users }) {
   )
 }
 
-function DataService({ services }) {
-  const columns = [
-    { field: 'id', headerName: 'No', width: 90 },
-    {
-      field: 'item_service',
-      headerName: 'Service',
-      width: 150,
-    },
-    {
-      field: 'doctor',
-      headerName: 'Doctor',
-      width: 150,
-    },
-    {
-      field: 'amount',
-      headerName: 'Amount',
-      type: 'number',
-      width: 150,
-    },
-    {
-      field: 'price',
-      headerName: 'Unit Price',
-      type: 'number',
-      width: 150,
-    },
-    {
-      field: 'fixed_price',
-      headerName: 'Total Price',
-      type: 'number',
-      width: 150,
-    }
-  ];
-  return (
-    <Box sx={{ bgcolor: "white", height: 400, width: '100%', paddingRight: 10, paddingLeft: 10 }}>
-      <DataGrid
-        rows={services}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
-        pageSizeOptions={[5]}
-      />
-    </Box>
-  )
-}
+// function DataService({ services }) {
+//   const columns = [
+//     { field: 'id', headerName: 'No', width: 90 },
+//     {
+//       field: 'item_service',
+//       headerName: 'Service',
+//       width: 150,
+//     },
+//     {
+//       field: 'doctor',
+//       headerName: 'Doctor',
+//       width: 150,
+//     },
+//     {
+//       field: 'amount',
+//       headerName: 'Amount',
+//       type: 'number',
+//       width: 150,
+//     },
+//     {
+//       field: 'price',
+//       headerName: 'Unit Price',
+//       type: 'number',
+//       width: 150,
+//     },
+//     {
+//       field: 'fixed_price',
+//       headerName: 'Total Price',
+//       type: 'number',
+//       width: 150,
+//     }
+//   ];
+//   return (
+//     <Box sx={{ bgcolor: "white", height: 400, width: '100%', paddingRight: 10, paddingLeft: 10 }}>
+//       <DataGrid
+//         rows={services}
+//         columns={columns}
+//         initialState={{
+//           pagination: {
+//             paginationModel: {
+//               pageSize: 5,
+//             },
+//           },
+//         }}
+//         pageSizeOptions={[5]}
+//       />
+//     </Box>
+//   )
+// }
 
 function DataTable({ services }) {
   console.log(services)
