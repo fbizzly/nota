@@ -140,13 +140,9 @@ function CardPromo() {
           <Collapse in={open} timeout="auto"
             unmountOnExit>
             <CardContent>
-              
-              <Container sx={{
-                height: 100,
-                lineHeight: 2
-              }}>
+              <Container >
                 <CardMedia
-                  sx={{ height: 140, paddingTop: '100px' }}
+                  sx={{ height: 540, paddingTop: '10px' }}
                   image="https://firebasestorage.googleapis.com/v0/b/pet-client-profile.appspot.com/o/promo.jpg?alt=media"
                 />
               </Container>
@@ -178,7 +174,7 @@ function CardPromo() {
 //   )
 // }
 
-  
+
 function CollapseTop({ soSubtotal, layananSubtotal }) {
   const [expanded, setExpanded] = useState(false);
   const handleExpand = () => {
@@ -508,8 +504,8 @@ function App_main({ match }) {
               <CollapseTop soSubtotal={soSubtotal} layananSubtotal={layananSubtotal} />
             </Grid>
             <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
-              <CardPromo header={dataHeader}/>
-            </Grid> 
+              <CardPromo header={dataHeader} />
+            </Grid>
           </Grid>
         </Container>
 
