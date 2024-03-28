@@ -9,7 +9,6 @@ import {
   Typography,
   Image,
   CssBaseline,
-  Container,
   Box,
   Table,
   TableBody,
@@ -27,6 +26,7 @@ import {
   Stack,
   Grid,
   CardHeader,
+  Container,
   Collapse,
   Divider,
   Button,
@@ -46,6 +46,11 @@ import {
 import { styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import KeyboardArrowDownIcon from
+  "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from
+  "@mui/icons-material/KeyboardArrowUp";
+
 import "./App.css";
 import numeral from 'numeral';
 
@@ -95,16 +100,56 @@ const ccyFormat = num => {
 
 
 function CardPromo() {
+  const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const handleExpand = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
   return (
-    <Card onClick={handleExpand} sx={{ borderRadius: '16px' }}>
-      <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
-        Bismillah
-      </CardContent>
-    </Card>
+    <>
+      {/*}
+      <h1 style={{
+        display: "flex",
+        justifyContent: "center",
+        color: "green"
+      }}>
+    </h1>
+    {*/}
+      <Card sx={{
+        minWidth: 300,
+        border: "1px solid rgba(211,211,211,0.6)",
+        borderRadius: '16px'
+      }}>
+        <CardHeader
+          title="Promo Spesial Super hemat"
+          action={
+            <IconButton
+              onClick={() => setOpen(!open)}
+              aria-label="expand"
+              size="small"
+            >
+              {open ? <KeyboardArrowUpIcon />
+                : <KeyboardArrowDownIcon />}
+            </IconButton>
+          }
+        ></CardHeader>
+        <div style={{
+          backgroundColor: "rgba(211,211,211,0.4)"
+        }}>
+          <Collapse in={open} timeout="auto"
+            unmountOnExit>
+            <CardContent>
+              <Container sx={{
+                height: 100,
+                lineHeight: 2
+              }}>
+                Masukan gambar  kesini
+              </Container>
+            </CardContent>
+          </Collapse>
+        </div>
+      </Card>
+    </>
   )
 }
 
