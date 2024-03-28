@@ -46,8 +46,15 @@ import {
 import { styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+import KeyboardArrowDownIcon from
+  "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from
+  "@mui/icons-material/KeyboardArrowUp";
+
 import "./App.css";
 import numeral from 'numeral';
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -93,25 +100,83 @@ const ccyFormat = num => {
   return `${numeral(num).format('0,0.00')}`
 }
 
-function CardPromo({ header }) {
+function CardPromo() {
+  const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const handleExpand = () => {
+    setExpanded((prevExpanded) => !prevExpanded);
+  };
   return (
-    <Card sx={{ borderRadius: '16px' }}>
-      <CardMedia
-        sx={{ height: 140, paddingTop: '100px' }}
-        image="https://firebasestorage.googleapis.com/v0/b/pet-client-profile.appspot.com/o/promo.jpg?alt=media"
-      />
-      <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
-        <Typography gutterBottom component="div" sx={{ fontWeight: 'bold', fontSize: "1.2em", borderBottom: 'solid 1px rgba(0, 0, 0, 0.1)' }}>
-          {/* {header.name} */}
-          {'Nama Promo'}
-        </Typography>
-        <Typography color="text.secondary" sx={{ fontSize: "1em" }}>
-          {'Deskripsi Promo'}
-        </Typography>
-      </CardContent>
-    </Card >
+    <>
+      {/*}
+      <h1 style={{
+        display: "flex",
+        justifyContent: "center",
+        color: "green"
+      }}>
+    </h1>
+    {*/}
+      <Card sx={{
+        minWidth: 300,
+        border: "1px solid rgba(211,211,211,0.6)",
+        borderRadius: '16px'
+      }}>
+        <CardHeader
+          title="Promo Spesial Super hemat"
+          action={
+            <IconButton
+              onClick={() => setOpen(!open)}
+              aria-label="expand"
+              size="small"
+            >
+              {open ? <KeyboardArrowUpIcon />
+                : <KeyboardArrowDownIcon />}
+            </IconButton>
+          }
+        ></CardHeader>
+        <div style={{
+          backgroundColor: "rgba(211,211,211,0.4)"
+        }}>
+          <Collapse in={open} timeout="auto"
+            unmountOnExit>
+            <CardContent>
+              
+              <Container sx={{
+                height: 100,
+                lineHeight: 2
+              }}>
+                <CardMedia
+                  sx={{ height: 140, paddingTop: '100px' }}
+                  image="https://firebasestorage.googleapis.com/v0/b/pet-client-profile.appspot.com/o/promo.jpg?alt=media"
+                />
+              </Container>
+            </CardContent>
+          </Collapse>
+        </div>
+      </Card>
+    </>
   )
 }
+
+// function CardPromo({ header }) {
+//   return (
+//     <Card sx={{ borderRadius: '16px' }}>
+//       <CardMedia
+//         sx={{ height: 140, paddingTop: '100px' }}
+//         image="https://firebasestorage.googleapis.com/v0/b/pet-client-profile.appspot.com/o/promo.jpg?alt=media"
+//       />
+//       <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
+//         <Typography gutterBottom component="div" sx={{ fontWeight: 'bold', fontSize: "1.2em", borderBottom: 'solid 1px rgba(0, 0, 0, 0.1)' }}>
+//           {/* {header.name} */}
+//           {'Nama Promo'}
+//         </Typography>
+//         <Typography color="text.secondary" sx={{ fontSize: "1em" }}>
+//           {'Deskripsi Promo'}
+//         </Typography>
+//       </CardContent>
+//     </Card >
+//   )
+// }
 
   
 function CollapseTop({ soSubtotal, layananSubtotal }) {
@@ -349,6 +414,7 @@ const TableSpanning = ({ services, layananSubtotal }) => {
 function App_main({ match }) {
   const classes = useStyles();
 
+  const ur_api = "http://51.79.188.207:9000";
   let { id } = useParams();
   const [services, setServices] = useState([]);
   const [users, setUsers] = useState([]);
@@ -357,7 +423,7 @@ function App_main({ match }) {
   const [loading, setLoading] = useState(true);
   // const [dataImg, setDataImg] = useState(true);
   async function fetchData() {
-    await fetch(`http://51.79.188.207:9000/outlet/${id}`)
+    await fetch(`${ur_api}/outlet/${id}`)
       .then((res) => res.json())
       .then((res) => {
         console.log(res)
@@ -365,14 +431,14 @@ function App_main({ match }) {
           setHeader(res[0]);
         }
       });
-    await fetch(`http://51.79.188.207:9000/user/${id}`)
+    await fetch(`${ur_api}/user/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.lenght != 0) {
           setUsers(res[0]);
         }
       });
-    await fetch(`http://51.79.188.207:9000/order/${id}`)
+    await fetch(`${ur_api}/order/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.lenght != 0) {
