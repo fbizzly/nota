@@ -93,6 +93,22 @@ const ccyFormat = num => {
   return `${numeral(num).format('0,0.00')}`
 }
 
+
+function CardPromo() {
+  const [expanded, setExpanded] = useState(false);
+  const handleExpand = () => {
+    setExpanded((prevExpanded) => !prevExpanded);
+  };
+  return (
+    <Card onClick={handleExpand} sx={{ borderRadius: '16px' }}>
+      <CardContent sx={{ paddingRight: 4, paddingLeft: 4 }}>
+        Bismillah
+      </CardContent>
+    </Card>
+  )
+}
+
+
 function CollapseTop({ soSubtotal, layananSubtotal }) {
   const [expanded, setExpanded] = useState(false);
   const handleExpand = () => {
@@ -150,9 +166,7 @@ function CollapseTop({ soSubtotal, layananSubtotal }) {
 }
 
 function DataSo({ so, soSubtotal }) {
-
   const [expandedRow, setExpandedRow] = useState(null);
-
   return (
     <>
       <Card sx={{ borderRadius: '16px' }}>
@@ -333,23 +347,24 @@ function App_main({ match }) {
   const [users, setUsers] = useState([]);
   const [so, setSo] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const [dataImg, setDataImg] = useState(true);
+
   async function fetchData() {
-    await fetch(`http://localhost:9000/order/${id}`)
+    const ur_api = "http://51.79.188.207:9000";
+    await fetch(`${ur_api}/order/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.lenght != 0) {
           setServices(res);
         }
       });
-    await fetch(`http://localhost:9000/user/${id}`)
+    await fetch(`${ur_api}/user/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.lenght != 0) {
           setUsers(res[0]);
         }
       });
-    await fetch(`http://localhost:9000/order/${id}`)
+    await fetch(`${ur_api}/order/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.lenght != 0) {
@@ -405,7 +420,6 @@ function App_main({ match }) {
             </Grid>
             <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }} >
               <GenerateBarcode imageUrl={'PV-20220101-2690'} users={users} />
-
             </Grid>
             {/* <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
               <TableSpanning services={services} layananSubtotal={layananSubtotal} />
@@ -415,6 +429,11 @@ function App_main({ match }) {
                 <DataSo so={so} soSubtotal={soSubtotal} />
               </Card>
             </Grid>
+            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
+              <CardPromo />
+            </Grid>
+
+
             <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
               <CollapseTop soSubtotal={soSubtotal} layananSubtotal={layananSubtotal} />
             </Grid>
@@ -444,6 +463,8 @@ function App_main({ match }) {
     </React.Fragment>
   );
 }
+
+
 function LoadingPage() {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
