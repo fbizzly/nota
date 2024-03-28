@@ -141,10 +141,12 @@ function CardPromo() {
             unmountOnExit>
             <CardContent>
               <Container >
+              <a href="https://www.instagram.com/p/C4-GtnMvEyP/?igsh=bHRyeTFsb3I1bnkw">
                 <CardMedia
                   sx={{ height: 540, paddingTop: '10px' }}
                   image="https://firebasestorage.googleapis.com/v0/b/pet-client-profile.appspot.com/o/promo.jpg?alt=media"
                 />
+                </a>
               </Container>
             </CardContent>
           </Collapse>
