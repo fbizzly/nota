@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 const { Pool } = require('pg');
 const pool = new Pool({
-  	user: 'openpg',
+  	user: 'postgres',
   	host: '127.0.0.1',
-  	database: 'test',
-  	password: 'openpgpwd',
-  	port: 5433,
+  	database: 'RAP',
+  	password: 'postgres',
+  	port: 5432,
   });
 
 router.get('/order/:id', async function(req, res, next) {
@@ -29,7 +29,7 @@ router.get('/order/:id', async function(req, res, next) {
 router.get('/outlet/:id', async function(req, res, next) {
   var param = req.params;
   var id = param.id;
-  var query = `select pos_config.receipt_header, pos_config.receipt_footer from pos_order
+  var query = `select pos_config.receipt_header, pos_config.receipt_footer, pos_config.name  from pos_order
                 left join pos_session on pos_session.id = pos_order.session_id
                 left join pos_config on pos_session.config_id = pos_config.id
                 where pos_order.pos_reference = '${id}'`
