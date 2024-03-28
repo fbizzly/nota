@@ -52,6 +52,7 @@ import KeyboardArrowUpIcon from
   "@mui/icons-material/KeyboardArrowUp";
 
 import "./App.css";
+import promoJpg from "./promo.jpeg";
 import numeral from 'numeral';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -134,16 +135,12 @@ function CardPromo() {
           }
         ></CardHeader>
         <div style={{
-          backgroundColor: "rgba(211,211,211,0.4)"
         }}>
           <Collapse in={open} timeout="auto"
             unmountOnExit>
             <CardContent>
-              <Container sx={{
-                height: 100,
-                lineHeight: 2
-              }}>
-                Masukan gambar  kesini
+              <Container >
+                <CardMedia sx={{ height: 540, objectFit: "contain" }} image={promoJpg} />
               </Container>
             </CardContent>
           </Collapse>
@@ -475,12 +472,10 @@ function App_main({ match }) {
               </Card>
             </Grid>
             <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
-              <CardPromo />
-            </Grid>
-
-
-            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
               <CollapseTop soSubtotal={soSubtotal} layananSubtotal={layananSubtotal} />
+            </Grid>
+            <Grid item xs={12} style={{ marginBottom: 10, marginTop: 10 }}>
+              <CardPromo />
             </Grid>
           </Grid>
         </Container>
